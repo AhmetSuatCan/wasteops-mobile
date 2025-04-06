@@ -2,9 +2,9 @@
   "expo": {
     "name": "wasteops-mobile",
     "slug": "wasteops-mobile",
+    "runtimeVersion": "1.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -34,7 +34,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
@@ -47,9 +48,6 @@
     "owner": "asece23",
     "updates": {
       "url": "https://u.expo.dev/0a0890e3-fda3-47f4-8d90-4b8e15cf223a"
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
     }
   }
 }
