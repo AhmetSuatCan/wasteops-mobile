@@ -1,6 +1,6 @@
 // app/_layout.tsx
 import { useEffect } from 'react';
-import { Stack, useRouter } from 'expo-router';
+import { Slot, useRouter } from 'expo-router';
 import { useAuthStore } from '../store/authStore';
 import { ActivityIndicator, View } from 'react-native';
 
@@ -13,9 +13,9 @@ export default function RootLayout() {
       const isValid = await checkAuth();
       
       if (isValid) {
-          router.replace('/dashboard/panel');
+          router.replace('/panel');
       } else {
-        router.replace('/auth/login');
+        router.replace('/login');
       }
     };
 
@@ -30,5 +30,5 @@ export default function RootLayout() {
     );
   }
 
-  return <Stack />;
+  return <Slot />;
 }

@@ -1,11 +1,12 @@
-// store/authStore.ts
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import { authApi } from '../services/api/auth';
+import { organizationApi } from '../services/api/organization';
 
 interface AuthState {
   user: any | null;
   isAuthenticated: boolean;
+  hasOrganization: any | null;  // Store organization data or null
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (userData: any) => Promise<void>;
@@ -16,31 +17,43 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
+  hasOrganization: null,  // Initially null, will be updated after login or token check
   isLoading: true,
-  
+
   login: async (email, password) => {
     try {
       const data = await authApi.login(email, password);
-      console.log("error point:")
-      console.log(data.tokens.access)
-      
+
+      // Save tokens to SecureStore
       await SecureStore.setItemAsync('accessToken', data.tokens.access);
       await SecureStore.setItemAsync('refreshToken', data.tokens.refresh);
       
-      set({ user: data.user, isAuthenticated: true });
+      // Check if user has an organization and get the details
+      const organizationData = await authApi.checkOrganization();
+
+      set({ 
+        user: data.user, 
+        isAuthenticated: true,
+        hasOrganization: organizationData, // Store organization data
+      });
     } catch (error) {
       console.error('Login failed:', error);
       throw error;
     }
   },
-  
+
   register: async (userData) => {
     try {
       const data = await authApi.register(userData);
-      await SecureStore.setItemAsync('accessToken', data.accessToken);
-      await SecureStore.setItemAsync('refreshToken', data.refreshToken);
+
+      await SecureStore.setItemAsync('accessToken', data.tokens.access);
+      await SecureStore.setItemAsync('refreshToken', data.tokens.refresh);
       
-      set({ user: data.user, isAuthenticated: true });
+      set({ 
+        user: data.user, 
+        isAuthenticated: true, 
+        hasOrganization: null, // Default to null until we check
+      });
     } catch (error) {
       console.error('Registration failed:', error);
       throw error;
@@ -48,8 +61,17 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
   
   logout: async () => {
-    await authApi.logout();
-    set({ user: null, isAuthenticated: false });
+    try {
+      await authApi.logout();
+      set({ 
+        user: null, 
+        isAuthenticated: false, 
+        hasOrganization: null // Reset organization state on logout
+      });
+    } catch (error) {
+      console.error('Logout failed:', error);
+      throw error;
+    }
   },
   
   checkAuth: async () => {
@@ -66,7 +88,16 @@ export const useAuthStore = create<AuthState>((set) => ({
       const { valid, data } = await authApi.validateToken();
       
       if (valid) {
-        set({ isAuthenticated: true, user: data.user, isLoading: false });
+        // Check organization status and get details
+        const organizationData = await organizationApi.checkOrganization();
+        
+        set({ 
+          isAuthenticated: true, 
+          user: data.user, 
+          hasOrganization: organizationData, // Update with organization details
+          isLoading: false 
+        });
+        
         return true;
       } else {
         set({ isAuthenticated: false, user: null, isLoading: false });
@@ -77,5 +108,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ isAuthenticated: false, user: null, isLoading: false });
       return false;
     }
-  }
+  },
 }));
+
+

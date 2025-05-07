@@ -12,7 +12,7 @@ const registerSchema = z.object({
     errorMap: () => ({ message: 'Please select a valid gender (M, F, or O)' }) 
   }),
   age: z.number().int().positive('Age must be a positive number'),
-  role: z.enum(['A', 'U'], { 
+  role: z.enum(['A', 'E'], { 
     errorMap: () => ({ message: 'Please select a valid role (A or U)' }) 
   }),
   phone_number: z.string().min(1, 'Phone number is required'),
@@ -80,7 +80,7 @@ export type LoginFormValues = z.infer<typeof loginSchema>;
         console.log("data in hook: "+ data)
       await authApi.register(data);
       setLoading(false);
-      router.navigate('/dashboard/panel');
+      router.navigate('/panel');
       return { success: true };
     } catch (err: any) {
       setLoading(false);

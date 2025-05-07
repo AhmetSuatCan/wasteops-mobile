@@ -1,8 +1,6 @@
 import axios from 'axios';
-import * as SecureStore from 'expo-secure-store';
+import  { V1_AUTH_URL, V1_ORGANIZATION_URL }  from './config';
 import { saveToken, getToken, deleteToken } from '../../utils/secureStorage';
-
-const API_URL = 'http://192.168.1.39:8000/api/v1/users';
 
 // Type for registration data
 export interface RegisterData {
@@ -18,7 +16,7 @@ export interface RegisterData {
 
 // Create axios instance
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: V1_AUTH_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -53,7 +51,7 @@ api.interceptors.response.use(
           return Promise.reject(new Error('No refresh token available'));
         }
         
-        const response = await axios.post(`${API_URL}/token/refresh/`, {
+        const response = await axios.post(`${V1_AUTH_URL}/token/refresh/`, {
           refresh: refreshToken,
         });
         
@@ -85,6 +83,7 @@ export const authApi = {
   login: async (email: string, password: string) => {
     try {
       const response = await api.post('/auth/login/', { email, password });
+      console.log(response)
       const { access, refresh, user } = response.data;
       
       // Store tokens in secure storage
@@ -99,7 +98,6 @@ export const authApi = {
   },
   
   register: async (userData: RegisterData) => {
-
     try {
       const response = await api.post('/auth/register/', userData);
       
@@ -139,7 +137,8 @@ export const authApi = {
       return { valid: false, error };
     }
   },
-  
+
+  // Logout function to clear tokens
   logout: async () => {
     try {
       // You might want to call a backend logout endpoint here
@@ -155,7 +154,8 @@ export const authApi = {
       throw error;
     }
   },
-  
+
+  // Get current user's data
   getUser: async () => {
     try {
       const response = await api.get('/me');
@@ -164,7 +164,20 @@ export const authApi = {
       console.error('Get user error:', error);
       throw error;
     }
+  },
+checkOrganization : async () => {
+    const response = await axios.get(`${V1_ORGANIZATION_URL}/core/checkOrganization/`, {
+      headers: {
+        Authorization: `Bearer ${await getToken('accessToken')}`,
+      },
+    });
+    if (response.status === 200) {
+      return response.data;  
+    } else {
+      return null;
   }
+}
 };
 
 export default api;
+

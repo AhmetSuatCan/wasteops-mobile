@@ -6,6 +6,6 @@ export default function Index() {
   const { isAuthenticated } = useAuthStore();
   
   return isAuthenticated ? 
-    <Redirect href="/dashboard/panel" /> : 
-    <Redirect href="/auth/login" />;
+    <Redirect href="/panel" /> : 
+    <Redirect href="/login" />;
 }
