@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, Platform } from 'react-native';
 import { Link } from 'expo-router';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { TextInput, Button, RadioButton, HelperText } from 'react-native-paper';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, HelperText, TextInput } from 'react-native-paper';
 import useAuth, { RegisterFormValues } from '../../hooks/useAuth';
 
 const roles = [
@@ -180,44 +180,64 @@ export default function Register() {
           control={control}
           name="gender"
           render={({ field: { onChange, value } }) => (
-            <View style={styles.radioContainer}>
-              {genders.map((gender) => (
-                <View key={gender.value} style={styles.radioItem}>
-                  <RadioButton
-                    value={gender.value}
-                    status={value === gender.value ? 'checked' : 'unchecked'}
-                    onPress={() => onChange(gender.value)}
-                  />
-                  <Text onPress={() => onChange(gender.value)}>{gender.label}</Text>
-                </View>
+            <View style={styles.segmentedControl}>
+              {genders.map((gender, index) => (
+                <TouchableOpacity
+                  key={gender.value}
+                  style={[
+                    styles.segment,
+                    value === gender.value && styles.segmentActive,
+                    index === 0 && { borderTopLeftRadius: 8, borderBottomLeftRadius: 8 },
+                    index === genders.length - 1 && { borderTopRightRadius: 8, borderBottomRightRadius: 8 }
+                  ]}
+                  onPress={() => onChange(gender.value)}
+                >
+                  <Text style={[
+                    styles.segmentText,
+                    value === gender.value && styles.segmentTextActive
+                  ]}>{gender.label}</Text>
+                </TouchableOpacity>
               ))}
-              {errors.gender && <HelperText type="error">{errors.gender.message}</HelperText>}
-              {serverErrors?.gender && <HelperText type="error">{serverErrors.gender}</HelperText>}
             </View>
           )}
         />
+        {(errors.gender || serverErrors?.gender) && (
+          <HelperText type="error">
+            {errors.gender?.message || serverErrors?.gender}
+          </HelperText>
+        )}
 
         <Text style={styles.sectionTitle}>Role</Text>
         <Controller
           control={control}
           name="role"
           render={({ field: { onChange, value } }) => (
-            <View style={styles.radioContainer}>
-              {roles.map((role) => (
-                <View key={role.value} style={styles.radioItem}>
-                  <RadioButton
-                    value={role.value}
-                    status={value === role.value ? 'checked' : 'unchecked'}
-                    onPress={() => onChange(role.value)}
-                  />
-                  <Text onPress={() => onChange(role.value)}>{role.label}</Text>
-                </View>
+            <View style={styles.segmentedControl}>
+              {roles.map((role, index) => (
+                <TouchableOpacity
+                  key={role.value}
+                  style={[
+                    styles.segment,
+                    value === role.value && styles.segmentActive,
+                    index === 0 && { borderTopLeftRadius: 8, borderBottomLeftRadius: 8 },
+                    index === roles.length - 1 && { borderTopRightRadius: 8, borderBottomRightRadius: 8 }
+                  ]}
+                  onPress={() => onChange(role.value)}
+                >
+                  <Text style={[
+                    styles.segmentText,
+                    value === role.value && styles.segmentTextActive
+                  ]}>{role.label}</Text>
+                </TouchableOpacity>
               ))}
-              {errors.role && <HelperText type="error">{errors.role.message}</HelperText>}
-              {serverErrors?.role && <HelperText type="error">{serverErrors.role}</HelperText>}
             </View>
           )}
         />
+        {(errors.role || serverErrors?.role) && (
+          <HelperText type="error">
+            {errors.role?.message || serverErrors?.role}
+          </HelperText>
+        )}
 
         <Button 
           mode="contained" 
@@ -265,19 +285,32 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 15,
   },
-  radioContainer: {
+  segmentedControl: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#169976',
+    borderRadius: 8,
+    overflow: 'hidden',
   },
-  radioItem: {
-    flexDirection: 'row',
+  segment: {
+    flex: 1,
+    paddingVertical: 12,
     alignItems: 'center',
-    marginRight: 20,
-    marginBottom: 5,
+    backgroundColor: 'white',
+  },
+  segmentActive: {
+    backgroundColor: '#169976',
+  },
+  segmentText: {
+    fontSize: 16,
+    color: '#169976',
+  },
+  segmentTextActive: {
+    color: 'white',
   },
   button: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#169976',
     marginTop: 20,
     paddingVertical: 8,
   },
@@ -292,7 +325,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   toggleText: {
-    color: '#2196F3',
+    color: '#169976',
     fontWeight: 'bold',
   },
 });

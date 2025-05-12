@@ -12,14 +12,13 @@ export default function AuthLayout() {
     if (isLoading) return;
 
     if (isAuthenticated) {
-        console.log('BUBIRHATA')
-        console.log(hasOrganization)
       if (hasOrganization === null) {
         // We don't know if the user has an organization yet; do nothing or show a loading screen
-        return;
+        router.replace('/organizationCreate')
       }
+      console.log(`organization status on layout component: ${hasOrganization}`)
 
-      if (hasOrganization.hasOrganization !== false) {
+      if (hasOrganization !== false) {
         // User is authenticated and has an organization
         router.replace('/panel');
       } else{

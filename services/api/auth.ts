@@ -83,7 +83,6 @@ export const authApi = {
   login: async (email: string, password: string) => {
     try {
       const response = await api.post('/auth/login/', { email, password });
-      console.log(response)
       const { access, refresh, user } = response.data;
       
       // Store tokens in secure storage
@@ -158,25 +157,35 @@ export const authApi = {
   // Get current user's data
   getUser: async () => {
     try {
-      const response = await api.get('/me');
+      const response = await api.get('/me',{
+      headers: {
+        Authorization: `Bearer ${await getToken('accessToken')}`,
+      }});
       return response.data;
     } catch (error) {
       console.error('Get user error:', error);
       throw error;
     }
   },
-checkOrganization : async () => {
+checkOrganization: async () => {
+  try {
     const response = await axios.get(`${V1_ORGANIZATION_URL}/core/checkOrganization/`, {
       headers: {
         Authorization: `Bearer ${await getToken('accessToken')}`,
       },
+      validateStatus: (status) => status === 200 || status === 404,
     });
+
     if (response.status === 200) {
-      return response.data;  
-    } else {
-      return null;
+      return response.data;
+    } else if (response.status === 404) {
+      return false;
+    }
+  } catch (error) {
+    console.error('Unexpected error while checking organization:', error);
   }
 }
+
 };
 
 export default api;

@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import { authApi } from '../services/api/auth';
-import { organizationApi } from '../services/api/organization';
 
 interface AuthState {
   user: any | null;
@@ -23,16 +22,17 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email, password) => {
     try {
       const data = await authApi.login(email, password);
+      console.log(`this is response data: ${data}`)
 
       // Save tokens to SecureStore
       await SecureStore.setItemAsync('accessToken', data.tokens.access);
       await SecureStore.setItemAsync('refreshToken', data.tokens.refresh);
       
-      // Check if user has an organization and get the details
+      const userData = await authApi.getUser();
       const organizationData = await authApi.checkOrganization();
 
       set({ 
-        user: data.user, 
+        user: userData,
         isAuthenticated: true,
         hasOrganization: organizationData, // Store organization data
       });
@@ -89,7 +89,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       
       if (valid) {
         // Check organization status and get details
-        const organizationData = await organizationApi.checkOrganization();
+        const organizationData = await authApi.checkOrganization();
         
         set({ 
           isAuthenticated: true, 

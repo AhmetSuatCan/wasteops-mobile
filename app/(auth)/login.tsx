@@ -1,8 +1,8 @@
 // app/auth/login.tsx
-import { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { useAuthStore } from '../../store/authStore';
 import { Link } from 'expo-router';
+import { useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useAuthStore } from '../../store/authStore';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   bigTitle:{
-    color:"#2196F3",
+    color:"#169976",
     fontSize:36,
     fontWeight:'bold',
     marginBottom:30,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   button: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#169976',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   toggleText: {
-    color: '#2196F3',
+    color: '#169976',
     fontWeight: 'bold',
   },
 });
