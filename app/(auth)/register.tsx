@@ -60,6 +60,7 @@ export default function Register() {
                 onChangeText={onChange}
                 value={value}
                 error={!!errors.name || !!serverErrors?.name}
+                theme={{ colors: { primary: '#169976' } }}
               />
               {errors.name && <HelperText type="error">{errors.name.message}</HelperText>}
               {serverErrors?.name && <HelperText type="error">{serverErrors.name}</HelperText>}
@@ -82,6 +83,7 @@ export default function Register() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 error={!!errors.email || !!serverErrors?.email}
+                theme={{ colors: { primary: '#169976' } }}
               />
               {errors.email && <HelperText type="error">{errors.email.message}</HelperText>}
               {serverErrors?.email && <HelperText type="error">{serverErrors.email}</HelperText>}
@@ -103,6 +105,7 @@ export default function Register() {
                 value={value}
                 secureTextEntry
                 error={!!errors.password || !!serverErrors?.password}
+                theme={{ colors: { primary: '#169976' } }}
               />
               {errors.password && <HelperText type="error">{errors.password.message}</HelperText>}
               {serverErrors?.password && <HelperText type="error">{serverErrors.password}</HelperText>}
@@ -124,6 +127,7 @@ export default function Register() {
                 value={value.toString()}
                 keyboardType="numeric"
                 error={!!errors.age || !!serverErrors?.age}
+                theme={{ colors: { primary: '#169976' } }}
               />
               {errors.age && <HelperText type="error">{errors.age.message}</HelperText>}
               {serverErrors?.age && <HelperText type="error">{serverErrors.age}</HelperText>}
@@ -145,6 +149,7 @@ export default function Register() {
                 value={value}
                 keyboardType="phone-pad"
                 error={!!errors.phone_number || !!serverErrors?.phone_number}
+                theme={{ colors: { primary: '#169976' } }}
               />
               {errors.phone_number && <HelperText type="error">{errors.phone_number.message}</HelperText>}
               {serverErrors?.phone_number && <HelperText type="error">{serverErrors.phone_number}</HelperText>}
@@ -167,6 +172,7 @@ export default function Register() {
                 multiline
                 numberOfLines={3}
                 error={!!errors.address || !!serverErrors?.address}
+                theme={{ colors: { primary: '#169976' } }}
               />
               {errors.address && <HelperText type="error">{errors.address.message}</HelperText>}
               {serverErrors?.address && <HelperText type="error">{serverErrors.address}</HelperText>}

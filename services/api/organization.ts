@@ -1,8 +1,7 @@
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store'; // Make sure to import SecureStore
+import { useAuthStore } from '../../store/authStore'; // Importing the store
 import { V1_ORGANIZATION_URL } from './config';
-import * as SecureStore from 'expo-secure-store';  // Make sure to import SecureStore
-import { useAuthStore } from '../../store/authStore';  // Importing the store
-import {  getToken } from '../../utils/secureStorage';
 
 const api = axios.create({
   baseURL: V1_ORGANIZATION_URL,
@@ -37,7 +36,7 @@ export const organizationApi = {
   }) => {
     try {
       console.log('Request initiated to create organization');
-      const response = await api.post('/core/create/', data);
+      const response = await api.post('/core/', data);
       return response.data;
     } catch (error) {
       console.error('Create organization error:', error);
