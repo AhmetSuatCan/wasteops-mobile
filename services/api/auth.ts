@@ -1,6 +1,6 @@
 import axios from 'axios';
-import  { V1_AUTH_URL, V1_ORGANIZATION_URL }  from './config';
-import { saveToken, getToken, deleteToken } from '../../utils/secureStorage';
+import { deleteToken, getToken, saveToken } from '../../utils/secureStorage';
+import { V1_AUTH_URL, V1_HUMAN_RESOURCES_URL, V1_ORGANIZATION_URL } from './config';
 
 // Type for registration data
 export interface RegisterData {
@@ -83,7 +83,6 @@ export const authApi = {
   login: async (email: string, password: string) => {
     try {
       const response = await api.post('/auth/login/', { email, password });
-      console.log(response)
       const { access, refresh, user } = response.data;
       
       // Store tokens in secure storage
@@ -158,25 +157,53 @@ export const authApi = {
   // Get current user's data
   getUser: async () => {
     try {
-      const response = await api.get('/me');
+      const response = await api.get('/me',{
+      headers: {
+        Authorization: `Bearer ${await getToken('accessToken')}`,
+      }});
       return response.data;
     } catch (error) {
       console.error('Get user error:', error);
       throw error;
     }
   },
-checkOrganization : async () => {
-    const response = await axios.get(`${V1_ORGANIZATION_URL}/core/checkOrganization/`, {
+checkOwnedOrganization: async () => {
+  try {
+    const response = await axios.get(`${V1_ORGANIZATION_URL}/core/check-owned-organization/`, {
       headers: {
         Authorization: `Bearer ${await getToken('accessToken')}`,
       },
+      validateStatus: (status) => status === 200 || status === 404,
     });
+
     if (response.status === 200) {
-      return response.data;  
-    } else {
-      return null;
+      return response.data;
+    } else if (response.status === 404) {
+      return false;
+    }
+  } catch (error) {
+    console.error('Unexpected error while checking organization:', error);
+  }
+},
+checkActiveEmployment: async () => {
+  try {
+    const response = await axios.get(`${V1_HUMAN_RESOURCES_URL}/check-active-employment/`, {
+      headers: {
+        Authorization: `Bearer ${await getToken('accessToken')}`,
+      },
+      validateStatus: (status) => status === 200 || status === 404,
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else if (response.status === 404) {
+      return false;
+    }
+  } catch (error) {
+    console.error('Unexpected error while checking active employment:', error);
   }
 }
+
 };
 
 export default api;

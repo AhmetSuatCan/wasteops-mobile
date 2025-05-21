@@ -1,4 +1,5 @@
-const BASE_URL = 'http://192.168.1.32:8000';
+const BASE_URL = 'http://192.168.1.33:8000';
 
 export const V1_AUTH_URL = `${BASE_URL}/api/v1/users`;
 export const V1_ORGANIZATION_URL = `${BASE_URL}/api/v1/organizations`;
+export const V1_HUMAN_RESOURCES_URL = `${BASE_URL}/api/v1/human-resources`;

@@ -1,10 +1,9 @@
-import { Stack } from 'expo-router';
-import { useAuthStore } from '../../store/authStore';
+import { Stack, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { useRouter } from 'expo-router';
+import { useAuthStore } from '../../store/authStore';
 
 export default function AuthLayout() {
-  const { isAuthenticated, hasOrganization, isLoading } = useAuthStore();
+  const { isAuthenticated, user , hasOrganization, isLoading } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -12,19 +11,26 @@ export default function AuthLayout() {
     if (isLoading) return;
 
     if (isAuthenticated) {
-        console.log('BUBIRHATA')
-        console.log(hasOrganization)
       if (hasOrganization === null) {
         // We don't know if the user has an organization yet; do nothing or show a loading screen
-        return;
+        if(user.role === 'A'){  
+          router.replace('/organizationCreate')
+        }else{
+          router.replace('/organizationJoin')
+        }
       }
+      console.log(`organization status on layout component: ${hasOrganization}`)
 
-      if (hasOrganization.hasOrganization !== false) {
+      if (hasOrganization !== false) {
         // User is authenticated and has an organization
         router.replace('/panel');
       } else{
         // User is authenticated but doesn't have an organization
-        router.replace('/organizationCreate');
+        if(user.role === 'A'){
+          router.replace('/organizationCreate');
+        }else{
+          router.replace('/organizationJoin');
+        }
       }
     } else {
       // User is not authenticated, stay on the login/registration screen

@@ -1,7 +1,6 @@
-import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
+import { create } from 'zustand';
 import { authApi } from '../services/api/auth';
-import { organizationApi } from '../services/api/organization';
 
 interface AuthState {
   user: any | null;
@@ -23,18 +22,29 @@ export const useAuthStore = create<AuthState>((set) => ({
   login: async (email, password) => {
     try {
       const data = await authApi.login(email, password);
+      console.log(`this is response data: ${data}`)
 
       // Save tokens to SecureStore
       await SecureStore.setItemAsync('accessToken', data.tokens.access);
       await SecureStore.setItemAsync('refreshToken', data.tokens.refresh);
       
-      // Check if user has an organization and get the details
-      const organizationData = await authApi.checkOrganization();
+      const userData = await authApi.getUser();
+      console.log(`this is user data: ${userData.role}`)
+      
+      // Role-based organization data fetching
+      let organizationData;
+      if (userData.role === 'A') {
+        organizationData = await authApi.checkOwnedOrganization();
+      } else if (userData.role === 'E') {
+        organizationData = await authApi.checkActiveEmployment();
+      } else {
+        organizationData = false;
+      }
 
       set({ 
-        user: data.user, 
+        user: userData,
         isAuthenticated: true,
-        hasOrganization: organizationData, // Store organization data
+        hasOrganization: organizationData,
       });
     } catch (error) {
       console.error('Login failed:', error);
@@ -88,13 +98,22 @@ export const useAuthStore = create<AuthState>((set) => ({
       const { valid, data } = await authApi.validateToken();
       
       if (valid) {
-        // Check organization status and get details
-        const organizationData = await organizationApi.checkOrganization();
+        const userData = await authApi.getUser();
+        
+        // Role-based organization data fetching
+        let organizationData;
+        if (userData.role === 'A') {
+          organizationData = await authApi.checkOwnedOrganization();
+        } else if (userData.role === 'E') {
+          organizationData = await authApi.checkActiveEmployment();
+        } else {
+          organizationData = false;
+        }
         
         set({ 
           isAuthenticated: true, 
-          user: data.user, 
-          hasOrganization: organizationData, // Update with organization details
+          user: userData, 
+          hasOrganization: organizationData,
           isLoading: false 
         });
         
