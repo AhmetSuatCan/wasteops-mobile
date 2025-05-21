@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
+import { create } from 'zustand';
 import { authApi } from '../services/api/auth';
 
 interface AuthState {
@@ -29,12 +29,22 @@ export const useAuthStore = create<AuthState>((set) => ({
       await SecureStore.setItemAsync('refreshToken', data.tokens.refresh);
       
       const userData = await authApi.getUser();
-      const organizationData = await authApi.checkOrganization();
+      console.log(`this is user data: ${userData.role}`)
+      
+      // Role-based organization data fetching
+      let organizationData;
+      if (userData.role === 'A') {
+        organizationData = await authApi.checkOwnedOrganization();
+      } else if (userData.role === 'E') {
+        organizationData = await authApi.checkActiveEmployment();
+      } else {
+        organizationData = false;
+      }
 
       set({ 
         user: userData,
         isAuthenticated: true,
-        hasOrganization: organizationData, // Store organization data
+        hasOrganization: organizationData,
       });
     } catch (error) {
       console.error('Login failed:', error);
@@ -88,13 +98,22 @@ export const useAuthStore = create<AuthState>((set) => ({
       const { valid, data } = await authApi.validateToken();
       
       if (valid) {
-        // Check organization status and get details
-        const organizationData = await authApi.checkOrganization();
+        const userData = await authApi.getUser();
+        
+        // Role-based organization data fetching
+        let organizationData;
+        if (userData.role === 'A') {
+          organizationData = await authApi.checkOwnedOrganization();
+        } else if (userData.role === 'E') {
+          organizationData = await authApi.checkActiveEmployment();
+        } else {
+          organizationData = false;
+        }
         
         set({ 
           isAuthenticated: true, 
-          user: data.user, 
-          hasOrganization: organizationData, // Update with organization details
+          user: userData, 
+          hasOrganization: organizationData,
           isLoading: false 
         });
         

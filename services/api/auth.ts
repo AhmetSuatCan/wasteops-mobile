@@ -1,6 +1,6 @@
 import axios from 'axios';
-import  { V1_AUTH_URL, V1_ORGANIZATION_URL }  from './config';
-import { saveToken, getToken, deleteToken } from '../../utils/secureStorage';
+import { deleteToken, getToken, saveToken } from '../../utils/secureStorage';
+import { V1_AUTH_URL, V1_HUMAN_RESOURCES_URL, V1_ORGANIZATION_URL } from './config';
 
 // Type for registration data
 export interface RegisterData {
@@ -167,9 +167,9 @@ export const authApi = {
       throw error;
     }
   },
-checkOrganization: async () => {
+checkOwnedOrganization: async () => {
   try {
-    const response = await axios.get(`${V1_ORGANIZATION_URL}/core/checkOrganization/`, {
+    const response = await axios.get(`${V1_ORGANIZATION_URL}/core/check-owned-organization/`, {
       headers: {
         Authorization: `Bearer ${await getToken('accessToken')}`,
       },
@@ -183,6 +183,24 @@ checkOrganization: async () => {
     }
   } catch (error) {
     console.error('Unexpected error while checking organization:', error);
+  }
+},
+checkActiveEmployment: async () => {
+  try {
+    const response = await axios.get(`${V1_HUMAN_RESOURCES_URL}/check-active-employment/`, {
+      headers: {
+        Authorization: `Bearer ${await getToken('accessToken')}`,
+      },
+      validateStatus: (status) => status === 200 || status === 404,
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else if (response.status === 404) {
+      return false;
+    }
+  } catch (error) {
+    console.error('Unexpected error while checking active employment:', error);
   }
 }
 
