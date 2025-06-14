@@ -39,25 +39,25 @@ export default function OrganizationCreate() {
         <Ionicons name="chevron-back" size={36} color="#169976" />
       </TouchableOpacity>
 
-      <Text style={styles.heading}>Create Organization</Text>
+      <Text style={styles.heading}>Organizasyon Oluştur</Text>
 
-      <Text style={styles.label}>Organization Name</Text>
+      <Text style={styles.label}>Organizasyon Adı</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter organization name"
+        placeholder="Organizasyon adını girin"
         value={formData.name}
         onChangeText={(text) => handleInputChange('name', text)}
       />
       
-      <Text style={styles.label}>Address</Text>
+      <Text style={styles.label}>Adres</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter address"
+        placeholder="Adresi girin"
         value={formData.address}
         onChangeText={(text) => handleInputChange('address', text)}
       />
 
-      <Text style={styles.label}>Organization Type</Text>
+      <Text style={styles.label}>Organizasyon Tipi</Text>
       <View style={styles.segmentedControl}>
         <TouchableOpacity
           style={[
@@ -70,7 +70,7 @@ export default function OrganizationCreate() {
           <Text style={[
             styles.segmentText,
             formData.organization_type === 'government' && styles.segmentTextActive
-          ]}>Government</Text>
+          ]}>Kamu</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -83,7 +83,7 @@ export default function OrganizationCreate() {
           <Text style={[
             styles.segmentText,
             formData.organization_type === 'private' && styles.segmentTextActive
-          ]}>Private</Text>
+          ]}>Özel</Text>
         </TouchableOpacity>
       </View>
 
@@ -93,7 +93,7 @@ export default function OrganizationCreate() {
         disabled={loading}
       >
         <Text style={styles.createButtonText}>
-          {loading ? 'Creating...' : 'Create Organization'}
+          {loading ? 'Oluşturuluyor...' : 'Organizasyon Oluştur'}
         </Text>
       </TouchableOpacity>
       

@@ -6,14 +6,14 @@ import { Button, HelperText, TextInput } from 'react-native-paper';
 import useAuth, { RegisterFormValues } from '../../hooks/useAuth';
 
 const roles = [
-  { label: 'Admin', value: 'A' },
-  { label: 'Employee', value: 'E' },
+  { label: 'Yönetici', value: 'A' },
+  { label: 'Çalışan', value: 'E' },
 ];
 
 const genders = [
-  { label: 'Male', value: 'M' },
-  { label: 'Female', value: 'F' },
-  { label: 'Other', value: 'O' },
+  { label: 'Erkek', value: 'M' },
+  { label: 'Kadın', value: 'F' },
+  { label: 'Diğer', value: 'O' },
 ];
 
 export default function Register() {
@@ -45,16 +45,16 @@ export default function Register() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.title}>Hesap Oluştur</Text>
         {error && <Text style={styles.errorText}>{error}</Text>}
 
         <Controller
           control={control}
-          rules={{ required: 'Name is required' }}
+          rules={{ required: 'İsim gereklidir' }}
           render={({ field: { onChange, onBlur, value } }) => (
             <View style={styles.inputContainer}>
               <TextInput
-                label="Full Name"
+                label="Ad Soyad"
                 mode="outlined"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -71,11 +71,11 @@ export default function Register() {
 
         <Controller
           control={control}
-          rules={{ required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email format' } }}
+          rules={{ required: 'E-posta gereklidir', pattern: { value: /^\S+@\S+$/i, message: 'Geçersiz e-posta formatı' } }}
           render={({ field: { onChange, onBlur, value } }) => (
             <View style={styles.inputContainer}>
               <TextInput
-                label="Email"
+                label="E-posta"
                 mode="outlined"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -94,11 +94,11 @@ export default function Register() {
 
         <Controller
           control={control}
-          rules={{ required: 'Password is required', minLength: { value: 6, message: 'Password must be at least 6 characters' } }}
+          rules={{ required: 'Şifre gereklidir', minLength: { value: 6, message: 'Şifre en az 6 karakter olmalıdır' } }}
           render={({ field: { onChange, onBlur, value } }) => (
             <View style={styles.inputContainer}>
               <TextInput
-                label="Password"
+                label="Şifre"
                 mode="outlined"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -116,11 +116,11 @@ export default function Register() {
 
         <Controller
           control={control}
-          rules={{ required: 'Age is required', min: { value: 1, message: 'Age must be positive' } }}
+          rules={{ required: 'Yaş gereklidir', min: { value: 1, message: 'Yaş pozitif olmalıdır' } }}
           render={({ field: { onChange, onBlur, value } }) => (
             <View style={styles.inputContainer}>
               <TextInput
-                label="Age"
+                label="Yaş"
                 mode="outlined"
                 onBlur={onBlur}
                 onChangeText={(text) => onChange(text.replace(/[^0-9]/g, ''))}
@@ -138,11 +138,11 @@ export default function Register() {
 
         <Controller
           control={control}
-          rules={{ required: 'Phone number is required' }}
+          rules={{ required: 'Telefon numarası gereklidir' }}
           render={({ field: { onChange, onBlur, value } }) => (
             <View style={styles.inputContainer}>
               <TextInput
-                label="Phone Number"
+                label="Telefon Numarası"
                 mode="outlined"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -160,11 +160,11 @@ export default function Register() {
 
         <Controller
           control={control}
-          rules={{ required: 'Address is required' }}
+          rules={{ required: 'Adres gereklidir' }}
           render={({ field: { onChange, onBlur, value } }) => (
             <View style={styles.inputContainer}>
               <TextInput
-                label="Address"
+                label="Adres"
                 mode="outlined"
                 onBlur={onBlur}
                 onChangeText={onChange}
@@ -181,7 +181,7 @@ export default function Register() {
           name="address"
         />
 
-        <Text style={styles.sectionTitle}>Gender</Text>
+        <Text style={styles.sectionTitle}>Cinsiyet</Text>
         <Controller
           control={control}
           name="gender"
@@ -213,7 +213,7 @@ export default function Register() {
           </HelperText>
         )}
 
-        <Text style={styles.sectionTitle}>Role</Text>
+        <Text style={styles.sectionTitle}>Rol</Text>
         <Controller
           control={control}
           name="role"
@@ -251,14 +251,14 @@ export default function Register() {
           style={styles.button}
           disabled={loading}
         >
-          {loading ? <ActivityIndicator color="#fff" /> : 'Register'}
+          {loading ? <ActivityIndicator color="#fff" /> : 'Kayıt Ol'}
         </Button>
 
         <View style={styles.toggleContainer}>
-          <Text>Already have an account? </Text>
+          <Text>Zaten hesabınız var mı? </Text>
           <Link href="/login" asChild>
             <TouchableOpacity>
-              <Text style={styles.toggleText}>Login</Text>
+              <Text style={styles.toggleText}>Giriş Yap</Text>
             </TouchableOpacity>
           </Link>
         </View>
