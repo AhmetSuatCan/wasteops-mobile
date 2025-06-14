@@ -27,7 +27,11 @@ export default function RootLayout() {
       console.log(`organization status on layout component: ${hasOrganization}`)
 
       if (hasOrganization !== false) {
-        router.replace('/panel');
+        if(user.role === 'A'){  
+          router.replace('/panel');
+        }else{
+          router.replace('/home');
+        }
       } else{
         if(user.role === 'A'){
           router.replace('/organizationCreate');

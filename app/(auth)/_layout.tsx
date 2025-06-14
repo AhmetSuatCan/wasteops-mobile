@@ -23,7 +23,11 @@ export default function AuthLayout() {
 
       if (hasOrganization !== false) {
         // User is authenticated and has an organization
-        router.replace('/panel');
+        if(user.role === 'A'){
+          router.replace('/panel');
+        }else{
+          router.replace('/home');
+        }
       } else{
         // User is authenticated but doesn't have an organization
         if(user.role === 'A'){
