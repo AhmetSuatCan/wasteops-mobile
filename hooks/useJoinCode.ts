@@ -5,6 +5,7 @@ interface JoinCode {
   id: string;
   code: string;
   createdAt: Date;
+  expires_at: string;
   used: boolean;
   usedBy?: string;
   usedAt?: Date;
@@ -14,9 +15,10 @@ interface UseJoinCodeReturn {
   codes: JoinCode[];
   loading: boolean;
   error: string | null;
-  generateCode: () => Promise<void>;
+  generateCode: () => Promise<{ code: string }>;
   getCodes: () => Promise<void>;
   useCode: (code: string) => Promise<void>;
+  expireCode: (code: string) => Promise<void>;
 }
 
 export const useJoinCode = (): UseJoinCodeReturn => {
@@ -29,9 +31,13 @@ export const useJoinCode = (): UseJoinCodeReturn => {
     setError(null);
     try {
       const response = await humanResourcesApi.generateCode();
-      setCodes(prev => [...prev, response.data]);
+      console.log('Generated code response:', response);
+      await getCodes();
+      return response;
     } catch (err) {
+      console.error('Error generating code:', err);
       setError('Failed to generate code');
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -42,8 +48,10 @@ export const useJoinCode = (): UseJoinCodeReturn => {
     setError(null);
     try {
       const response = await humanResourcesApi.getCodes();
-      setCodes(response.data);
+      console.log('Fetched codes:', response);
+      setCodes(response);
     } catch (err) {
+      console.error('Error fetching codes:', err);
       setError('Failed to fetch codes');
     } finally {
       setLoading(false);
@@ -67,6 +75,21 @@ export const useJoinCode = (): UseJoinCodeReturn => {
     }
   };
 
+  const expireCode = async (code: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await humanResourcesApi.expireCode(code);
+      console.log('Code expired:', code);
+      await getCodes();
+    } catch (err) {
+      console.error('Error expiring code:', err);
+      setError('Failed to expire join code');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     codes,
     loading,
@@ -74,5 +97,6 @@ export const useJoinCode = (): UseJoinCodeReturn => {
     generateCode,
     getCodes,
     useCode,
+    expireCode,
   };
 }; 

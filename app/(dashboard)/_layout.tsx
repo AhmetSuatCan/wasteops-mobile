@@ -1,14 +1,14 @@
 // app/dashboard/_layout.tsx
-import { Tabs, useRouter } from 'expo-router';
-import { useAuthStore } from '../../store/authStore';
-import { useEffect } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Import icons
+import { Tabs, useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { useAuthStore } from '../../store/authStore';
 
 type TabBarIconProps = { color: string; size: number }; // 👈 fix typing for icons
 
 export default function DashboardLayout() {
-  const { isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
   const router = useRouter();
   
   useEffect(() => {
@@ -17,26 +17,24 @@ export default function DashboardLayout() {
     }
   }, [isAuthenticated]);
 
-  const handleLogout = async () => {
-    await logout();
-    router.replace('/login');
-  };
-
   return (
     <Tabs
       screenOptions={{
         headerRight: () => (
-          <TouchableOpacity onPress={handleLogout} style={{ marginRight: 15 }}>
-            <Text style={{ color: '#2196F3' }}>Logout</Text>
+          <TouchableOpacity 
+            onPress={() => router.replace('/(profile)')} 
+            style={{ marginRight: 15 }}
+          >
+            <Ionicons name="person-circle-outline" size={28} color="#169976" />
           </TouchableOpacity>
         ),
-        tabBarActiveTintColor: '#2196F3',
+        tabBarActiveTintColor: '#169976',
       }}
     >
       <Tabs.Screen 
         name="panel"
         options={{
-          title: 'Home',
+          title: 'Ana Sayfa',
           tabBarIcon: ({ color, size }: TabBarIconProps) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
@@ -45,7 +43,7 @@ export default function DashboardLayout() {
       <Tabs.Screen 
         name="facilities" 
         options={{
-          title: 'Facilities',
+          title: 'Tesisler',
           tabBarIcon: ({ color, size }: TabBarIconProps) => (
             <Ionicons name="business-outline" size={size} color={color} />
           ),
@@ -54,27 +52,27 @@ export default function DashboardLayout() {
       <Tabs.Screen 
         name="operations"
         options={{
-          title: 'Operations',
+          title: 'Operasyonlar',
           tabBarIcon: ({ color, size }: TabBarIconProps) => (
             <Ionicons name="construct-outline" size={size} color={color} />
           ),
         }}
       />
      <Tabs.Screen 
-        name="hr"
+        name="human_resources"
         options={{
-          title: 'HR',
+          title: 'İnsan Kaynakları',
           tabBarIcon: ({ color, size }: TabBarIconProps) => (
             <Ionicons name="people-outline" size={size} color={color} />
           ),
         }}
       />
        <Tabs.Screen 
-        name="inventory"
+        name="fleet"
         options={{
-          title: 'Inventory',
+          title: 'Filo',
           tabBarIcon: ({ color, size }: TabBarIconProps) => (
-            <Ionicons name="cube-outline" size={size} color={color} />
+            <Ionicons name="car-outline" size={size} color={color} />
           ),
         }}
       />

@@ -15,7 +15,7 @@ export default function Login() {
   const handleLogin = async () => {
     // Frontend validation
     if (!email || !password) {
-      setErrorMessage('Email and password are required.');
+      setErrorMessage('Email ve şifre gereklidir.');
       return;
     }
 
@@ -46,7 +46,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <Text style={styles.bigTitle}>WasteOps</Text>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Giriş Yap</Text>
 
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
@@ -54,7 +54,7 @@ export default function Login() {
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="E-posta"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -63,7 +63,7 @@ export default function Login() {
 
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Şifre"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -77,15 +77,15 @@ export default function Login() {
         {isLoading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>Giriş Yap</Text>
         )}
       </TouchableOpacity>
 
       <View style={styles.toggleContainer}>
-        <Text>Don't have an account? </Text>
+        <Text>Hesabınız yok mu? </Text>
         <Link href="/register" asChild>
           <TouchableOpacity>
-            <Text style={styles.toggleText}>Register</Text>
+            <Text style={styles.toggleText}>Kayıt Ol</Text>
           </TouchableOpacity>
         </Link>
       </View>

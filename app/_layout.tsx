@@ -5,7 +5,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 
 export default function RootLayout() {
-  const {hasOrganization, checkAuth, isAuthenticated, isLoading } = useAuthStore();
+  const {hasOrganization, checkAuth, isAuthenticated, isLoading, user } = useAuthStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -18,14 +18,26 @@ export default function RootLayout() {
 
     if (isAuthenticated) {
       if (hasOrganization === null) {
-        router.replace('/organizationCreate')
+        if(user.role === 'A'){  
+          router.replace('/organizationCreate')
+        }else{
+          router.replace('/organizationJoin')
+        }
       }
       console.log(`organization status on layout component: ${hasOrganization}`)
 
       if (hasOrganization !== false) {
-        router.replace('/panel');
+        if(user.role === 'A'){  
+          router.replace('/panel');
+        }else{
+          router.replace('/home');
+        }
       } else{
-        router.replace('/organizationCreate');
+        if(user.role === 'A'){
+          router.replace('/organizationCreate');
+        }else{
+          router.replace('/organizationJoin');
+        }
       }
     } else {
       router.replace('/login'); 

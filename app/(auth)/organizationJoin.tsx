@@ -63,8 +63,8 @@ export default function OrganizationJoin() {
         <Ionicons name="chevron-back" size={30} color="#169976" />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Join Organization</Text>
-      <Text style={styles.subtitle}>Enter the 6-character code provided by your organization admin.</Text>
+      <Text style={styles.title}>Organizasyona Katıl</Text>
+      <Text style={styles.subtitle}>Organizasyon yöneticiniz tarafından sağlanan 6 karakterlik kodu girin.</Text>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -90,7 +90,7 @@ export default function OrganizationJoin() {
         disabled={loading}
       >
         <Text style={styles.joinButtonText}>
-          {loading ? 'Joining...' : 'Join Organization'}
+          {loading ? 'Katılınıyor...' : 'Organizasyona Katıl'}
         </Text>
       </TouchableOpacity>
     </View>

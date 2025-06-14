@@ -1,12 +1,21 @@
 import { useState } from 'react';
+import { humanResourcesApi } from '../services/api/human_resources';
+
+interface User {
+  id: string;
+  name: string;
+  gender: 'M' | 'F' | 'O';
+  email: string;
+  age: number;
+  phone_number: string;
+  address: string;
+}
 
 interface Employee {
-  id: string;
-  userId: string;
-  organizationId: string;
-  role: string;
-  joinedAt: Date;
-  status: 'active' | 'inactive';
+  id: number;
+  user: User;
+  start_date: string;
+  created_at: string;
 }
 
 interface UseEmploymentReturn {
@@ -26,9 +35,8 @@ export const useEmployment = (): UseEmploymentReturn => {
     setLoading(true);
     setError(null);
     try {
-      // TODO: Implement API call to get employees
-      // const response = await api.get('/employment/employees');
-      // setEmployees(response.data);
+      const response = await humanResourcesApi.getEmployees();
+      setEmployees(response);
     } catch (err) {
       setError('Failed to fetch employees');
     } finally {
@@ -40,9 +48,8 @@ export const useEmployment = (): UseEmploymentReturn => {
     setLoading(true);
     setError(null);
     try {
-      // TODO: Implement API call to terminate employment
-      // await api.delete(`/employment/${employeeId}`);
-      // setEmployees(prev => prev.filter(emp => emp.id !== employeeId));
+      await humanResourcesApi.endEmployment(employeeId);
+      setEmployees(prev => prev.filter(emp => emp.user.id !== employeeId));
     } catch (err) {
       setError('Failed to terminate employment');
     } finally {

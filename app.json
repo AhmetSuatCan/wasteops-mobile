@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "wasteops-mobile",
+    "name": "WasteOps",
     "slug": "wasteops-mobile",
     "runtimeVersion": "1.0.0",
     "version": "1.0.0",
@@ -14,7 +14,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/ic_launcher-web.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.asece23.wasteopsmobile"
